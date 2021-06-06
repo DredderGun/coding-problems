@@ -3,6 +3,7 @@ package dev.avyguzov.leetcode;
 import java.util.HashMap;
 import java.util.concurrent.Semaphore;
 
+// https://leetcode.com/problems/print-in-order/
 public class Task1114 {
     private final HashMap<Integer, Boolean> doneTasks = new HashMap<>();
     private Semaphore semaphore = new Semaphore(1);

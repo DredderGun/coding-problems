@@ -33,34 +33,22 @@ public class Task1209 {
 
     public static void main(String[] args) {
 
-        ArrayList<Integer> al = new ArrayList<>();
-        al.add(1);
-        al.add(2);
-        al.add(3);
-        al.add(4);
-        al.add(5);
-        al.add(6);
+        Scanner s = new Scanner(System.in);
+        int n = s.nextInt();
+        long[] arrWithPositions = new long[n];
+        StringBuilder result = new StringBuilder();
 
-        al.remove(2);
+        for (int i = 0; i < n; i++) {
+            arrWithPositions[i] = s.nextLong();
+        }
 
-        System.out.println(al);
+        int[] answer = solution(arrWithPositions);
 
-//        Scanner s = new Scanner(System.in);
-//        int n = s.nextInt();
-//        long[] arrWithPositions = new long[n];
-//        StringBuilder result = new StringBuilder();
-//
-//        for (int i = 0; i < n; i++) {
-//            arrWithPositions[i] = s.nextLong();
-//        }
-//
-//        int[] answer = solution(arrWithPositions);
-//
-//        for (int i = 0; i < n; i++) {
-//            result.append(answer[i]);
-//            result.append(" ");
-//        }
-//
-//        System.out.println(result.toString().trim());
+        for (int i = 0; i < n; i++) {
+            result.append(answer[i]);
+            result.append(" ");
+        }
+
+        System.out.println(result.toString().trim());
     }
 }
