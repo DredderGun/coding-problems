@@ -9,13 +9,16 @@ public class Task1313 {
         int perimeter = pixelsMatrix.length * 2 - 1;
         ArrayList<Integer> result = new ArrayList<>();
         for (int p = 0; p < perimeter; p++) { // diagonal
-            for (int i = pixelsMatrix.length - 1; i >=0; i--) { // y
-                for (int j = 0; j < pixelsMatrix.length; j++) { // x
-                    if ((i + j) == p) {
-                        result.add(pixelsMatrix[i][j]);
-                        break;
-                    }
-                }
+            int i, j;
+            if (p < pixelsMatrix.length - 1) {
+                i = p;
+                j = 0;
+            } else {
+                i = pixelsMatrix.length - 1;
+                j = p - (pixelsMatrix.length - 1);
+            }
+            for (; i >= 0 && j < pixelsMatrix.length; i--, j++) {
+                result.add(pixelsMatrix[i][j]);
             }
         }
 

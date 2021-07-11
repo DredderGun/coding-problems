@@ -1,9 +1,9 @@
 package dev.avyguzov.timus;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
+// https://timus.online/problem.aspx?space=1&num=1209
 public class Task1209 {
     public static int[] solution(long[] arrWithPositions) {
         int[] answer = new int[arrWithPositions.length];
@@ -11,7 +11,7 @@ public class Task1209 {
         computedSums.put(1L, 1L);
 
         long lastIndex = 1;
-        for (int i = 0; i<arrWithPositions.length; i++) {
+        for (int i = 0; i < arrWithPositions.length; i++) {
             long currPosition = arrWithPositions[i];
             if (computedSums.containsValue(currPosition)) {
                 answer[i] = 1;
