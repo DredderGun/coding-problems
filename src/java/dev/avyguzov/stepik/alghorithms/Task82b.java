@@ -6,7 +6,7 @@ import java.util.*;
 class MyReader {
     private BufferedReader reader = null;
     private StringTokenizer tokenizer = null;
-    MyReader(Reader r) throws IOException {
+    MyReader(Reader r) {
         reader = new BufferedReader(r);
     }
     public int nextInt() throws IOException {
@@ -150,13 +150,11 @@ public class Task82b {
             subsequenceLength--;
         }
 
-        writer.println(answer.length);
-        StringBuilder sb = new StringBuilder();
+        String resultStr = answer.length + "\n";
         for (long n : answer) {
-            sb.append(n);
-            sb.append(" ");
+            resultStr = resultStr + n + " ";
         }
-        writer.println(sb);
+        writer.println(resultStr);
         writer.close();
     }
 }
