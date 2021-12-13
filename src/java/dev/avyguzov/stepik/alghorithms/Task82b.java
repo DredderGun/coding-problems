@@ -46,11 +46,7 @@ public class Task82b {
                 subsequenceChain[i] = subsequenceCounters[subsequenceLength];
                 subsequenceLength++;
             } else {
-                int[] subsequenceToSearch = new int[subsequenceLength + 1];
-                for (int j = 0; j <= subsequenceLength; j++) {
-                    subsequenceToSearch[j] = subsequenceCounters[j];
-                }
-                int indexToUpdate = searchUpperBound(nums, subsequenceToSearch, nums[i]);
+                int indexToUpdate = searchUpperBound(nums, subsequenceCounters, nums[i], subsequenceLength);
                 if (indexToUpdate - 1 >= 0) {
                     subsequenceChain[i] = subsequenceCounters[indexToUpdate - 1];
                 } else {
@@ -73,9 +69,9 @@ public class Task82b {
         return answer;
     }
 
-    private static int searchUpperBound(long[] nums, int[] indexesForSearch, long numberForSearch) {
+    private static int searchUpperBound(long[] nums, int[] indexesForSearch, long numberForSearch, int endIndex) {
         int left = 0;
-        int right = indexesForSearch.length;
+        int right = endIndex;
         int i;
         while (left < right) {
             i = (right + left) / 2;
@@ -85,21 +81,7 @@ public class Task82b {
                 right = i;
             }
         }
-        if (left == indexesForSearch.length) {
-            return indexesForSearch.length - 1;
-        }
         return left;
-    }
-
-    // метод, когда в следующую ячейку с ответом копируем элементы из предыдущего
-    private static long[] concatenateArrayAndElement(long[] ar1, long element) {
-        long[] newAr = new long[ar1.length + 1];
-        for (int j = 0; j < ar1.length; j++) {
-            newAr[j] = ar1[j];
-        }
-        newAr[ar1.length] = element;
-
-        return newAr;
     }
 
     /**
@@ -119,16 +101,13 @@ public class Task82b {
             nums[i] = s.nextLong();
             if (nums[i] > nums[subsequenceCounters[0]]) {
                 subsequenceCounters[0] = i;
+
             } else if (nums[i] <= nums[subsequenceCounters[subsequenceLength]]) {
                 subsequenceCounters[subsequenceLength + 1] = i;
                 subsequenceChain[i] = subsequenceCounters[subsequenceLength];
                 subsequenceLength++;
             } else {
-                int[] subsequenceToSearch = new int[subsequenceLength + 1];
-                for (int j = 0; j <= subsequenceLength; j++) {
-                    subsequenceToSearch[j] = subsequenceCounters[j];
-                }
-                int indexToUpdate = searchUpperBound(nums, subsequenceToSearch, nums[i]);
+                int indexToUpdate = searchUpperBound(nums, subsequenceCounters, nums[i], subsequenceLength);
                 if (indexToUpdate - 1 >= 0) {
                     subsequenceChain[i] = subsequenceCounters[indexToUpdate - 1];
                 } else {
@@ -150,11 +129,11 @@ public class Task82b {
             subsequenceLength--;
         }
 
-        String resultStr = answer.length + "\n";
+        StringBuilder sb = new StringBuilder().append(answer.length).append("\n");
         for (long n : answer) {
-            resultStr = resultStr + n + " ";
+            sb.append(n).append(" ");
         }
-        writer.println(resultStr);
+        writer.println(sb.toString());
         writer.close();
     }
 }
