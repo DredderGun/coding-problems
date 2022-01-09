@@ -47,16 +47,4 @@ class Task82bTest {
         assertArrayEquals(new int[] {1, 7, 8, 9, 10, 11, 12}, Task82b.solution(new long[]{10, 3, 3, 3, 3, 2, 7, 7, 7, 7, 7, 7}));
     }
 
-    @Test
-    public void testSegments9() {
-        Random rd = new Random();
-        long[] arr = new long[100000];
-        arr[0] = 999999999;
-        for (int i = 1; i < arr.length; i++) {
-            arr[i] = arr[i - 1] - 1;
-        }
-//        assertArrayEquals(new int[] {1, 7, 8, 9, 10, 11, 12}, Task82b.solution(arr));
-        assertEquals(new int[] {1, 7, 8, 9, 10, 11, 12}, Task82b.solution(arr).length);
-    }
-
 }

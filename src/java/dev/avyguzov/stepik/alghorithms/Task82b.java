@@ -46,11 +46,7 @@ public class Task82b {
                 subsequenceChain[i] = subsequenceCounters[subsequenceLength];
                 subsequenceLength++;
             } else {
-                int[] subsequenceToSearch = new int[subsequenceLength + 1];
-                for (int j = 0; j <= subsequenceLength; j++) {
-                    subsequenceToSearch[j] = subsequenceCounters[j];
-                }
-                int indexToUpdate = searchUpperBound(nums, subsequenceToSearch, nums[i]);
+                int indexToUpdate = searchUpperBound(nums, subsequenceCounters, nums[i], subsequenceLength);
                 if (indexToUpdate - 1 >= 0) {
                     subsequenceChain[i] = subsequenceCounters[indexToUpdate - 1];
                 } else {
@@ -73,9 +69,9 @@ public class Task82b {
         return answer;
     }
 
-    private static int searchUpperBound(long[] nums, int[] indexesForSearch, long numberForSearch) {
+    private static int searchUpperBound(long[] nums, int[] indexesForSearch, long numberForSearch, int endIndex) {
         int left = 0;
-        int right = indexesForSearch.length;
+        int right = endIndex;
         int i;
         while (left < right) {
             i = (right + left) / 2;
@@ -84,9 +80,6 @@ public class Task82b {
             } else {
                 right = i;
             }
-        }
-        if (left == indexesForSearch.length) {
-            return indexesForSearch.length - 1;
         }
         return left;
     }
@@ -102,59 +95,46 @@ public class Task82b {
         return newAr;
     }
 
+    private static int binSearch(int[] array, int key) { //search first index res, array[res] > key
+        int res = Arrays.binarySearch(array, key);
+        if (res < 0) return -res - 1;
+        while (array[res] == key) res++;
+        return res;
+    }
+
     /**
      * For input
      *
      */
     public static void main(String[] args) throws IOException {
-        MyReader s = new MyReader(new InputStreamReader(System.in));
-        long[] nums = new long[s.nextInt()];
-        int[] subsequenceCounters = new int[nums.length];
-        int[] subsequenceChain = new int[nums.length];
-        subsequenceCounters[0] = 0;
-        int subsequenceLength = 0;
-        nums[0] = s.nextLong();
-
-        for (int i = 1; i < nums.length; i++) {
-            nums[i] = s.nextLong();
-            if (nums[i] > nums[subsequenceCounters[0]]) {
-                subsequenceCounters[0] = i;
-            } else if (nums[i] <= nums[subsequenceCounters[subsequenceLength]]) {
-                subsequenceCounters[subsequenceLength + 1] = i;
-                subsequenceChain[i] = subsequenceCounters[subsequenceLength];
-                subsequenceLength++;
-            } else {
-                int[] subsequenceToSearch = new int[subsequenceLength + 1];
-                for (int j = 0; j <= subsequenceLength; j++) {
-                    subsequenceToSearch[j] = subsequenceCounters[j];
-                }
-                int indexToUpdate = searchUpperBound(nums, subsequenceToSearch, nums[i]);
-                if (indexToUpdate - 1 >= 0) {
-                    subsequenceChain[i] = subsequenceCounters[indexToUpdate - 1];
-                } else {
-                    subsequenceChain[i] = i + 1;
-                }
-                subsequenceCounters[indexToUpdate] = i;
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt(), max = 0;
+        int[] a = new int[n], d = new int[n + 1], indexes = new int[n + 1], prev = new int[n];
+        for (int i = n - 1; i >= 0; i--) { //revers
+            a[i] = sc.nextInt();
+            prev[i] = indexes[i] = -1;
+            d[i] = Integer.MAX_VALUE;
+        }
+        d[0] = -1;
+        d[n] = Integer.MAX_VALUE;
+        for (int i = 0; i < n; i++) {
+            int j = binSearch(d, a[i]);
+            if (d[j - 1] <= a[i] && d[j] > a[i]) {
+                d[j] = a[i];
+                indexes[j] = i;
+                prev[i] = indexes[j - 1];
+                if (j > max) max = j;
             }
         }
 
-        PrintWriter writer = new PrintWriter(new OutputStreamWriter(System.out));
-
-        int[] answer = new int[subsequenceLength + 1];
-        answer[subsequenceLength] = subsequenceCounters[subsequenceLength] + 1;
-        int prevIndex = subsequenceChain[subsequenceCounters[subsequenceLength]];
-        subsequenceLength--;
-        while (subsequenceLength >= 0) {
-            answer[subsequenceLength] = prevIndex + 1;
-            prevIndex = subsequenceChain[prevIndex];
-            subsequenceLength--;
+        LinkedList<Integer> res = new LinkedList<>();
+        System.out.println(max); // length
+        int index = indexes[max];
+        while (index >= 0) {
+            res.addLast(index);
+            index = prev[index];
         }
-
-        String resultStr = answer.length + "\n";
-        for (long n : answer) {
-            resultStr = resultStr + n + " ";
-        }
-        writer.println(resultStr);
-        writer.close();
+        for (Integer re : res)
+            System.out.print(n - re + " ");
     }
 }
