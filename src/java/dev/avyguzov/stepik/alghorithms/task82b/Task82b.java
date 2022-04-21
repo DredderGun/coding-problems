@@ -1,4 +1,4 @@
-package dev.avyguzov.stepik.alghorithms;
+package dev.avyguzov.stepik.alghorithms.task82b;
 
 import java.io.*;
 import java.util.*;
@@ -28,47 +28,6 @@ class MyReader {
  */
 public class Task82b {
 
-    /**
-     * For tests
-     *
-     */
-    public static int[] solution(long[] nums) {
-        int[] subsequenceCounters = new int[nums.length];
-        int[] subsequenceChain = new int[nums.length];
-        subsequenceCounters[0] = 0;
-        int subsequenceLength = 0;
-
-        for (int i = 1; i < nums.length; i++) {
-            if (nums[i] > nums[subsequenceCounters[0]]) {
-                subsequenceCounters[0] = i;
-            } else if (nums[i] <= nums[subsequenceCounters[subsequenceLength]]) {
-                subsequenceCounters[subsequenceLength + 1] = i;
-                subsequenceChain[i] = subsequenceCounters[subsequenceLength];
-                subsequenceLength++;
-            } else {
-                int indexToUpdate = searchUpperBound(nums, subsequenceCounters, nums[i], subsequenceLength);
-                if (indexToUpdate - 1 >= 0) {
-                    subsequenceChain[i] = subsequenceCounters[indexToUpdate - 1];
-                } else {
-                    subsequenceChain[i] = i + 1;
-                }
-                subsequenceCounters[indexToUpdate] = i;
-            }
-        }
-
-        int[] answer = new int[subsequenceLength + 1];
-        answer[subsequenceLength] = subsequenceCounters[subsequenceLength] + 1;
-        int prevIndex = subsequenceChain[subsequenceCounters[subsequenceLength]];
-        subsequenceLength--;
-        while (subsequenceLength >= 0) {
-            answer[subsequenceLength] = prevIndex + 1;
-            prevIndex = subsequenceChain[prevIndex];
-            subsequenceLength--;
-        }
-
-        return answer;
-    }
-
     private static int searchUpperBound(long[] nums, int[] indexesForSearch, long numberForSearch, int endIndex) {
         int left = 0;
         int right = endIndex;
@@ -88,7 +47,7 @@ public class Task82b {
      * For input
      *
      */
-    public static void main(String[] args) throws IOException {
+    public void run() throws IOException {
         MyReader s = new MyReader(new InputStreamReader(System.in));
         long[] nums = new long[s.nextInt()];
         int[] subsequenceCounters = new int[nums.length];
@@ -135,5 +94,12 @@ public class Task82b {
         }
         writer.println(sb.toString());
         writer.close();
+    }
+
+    public static void main(String[] args) throws IOException {
+        long startTime = System.currentTimeMillis();
+        new Task82b().run();
+        long finishTime = System.currentTimeMillis();
+        System.out.println(finishTime - startTime + "ms");
     }
 }
