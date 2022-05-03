@@ -1,7 +1,5 @@
 package dev.avyguzov.common.graphAlgorithms.dijkstra;
 
-import app.greedy.huffmanСode.HuffmanCode;
-
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Scanner;
