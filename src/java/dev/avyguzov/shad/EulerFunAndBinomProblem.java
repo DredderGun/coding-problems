@@ -3,111 +3,72 @@ package dev.avyguzov.shad;
 import java.util.*;
 
 public class EulerFunAndBinomProblem {
-    HashMap<Long, Long> eulerFunCache = new HashMap<>();
 
     public long solution(int n, int k) {
         if (k > n / 2) k = n - k;
-        if (k == 1) return euler(n);
-        if (k == 0) return 1;
+        if (k == 0) return 1L;
 
-        long r = 1;
-        long result = 1;
-        for (int i = 1; i <= k; ++i) {
-            r *= n - k + i;
-            r /= i;
-
-            if (r > 1_000_000_007) {
-                result *= euler(r % 1_000_000_007);
-                r = 1;
+        boolean[] visitedNmbrs = new boolean[n + 1];
+        long result = 1, powForCurrPrime = 0;
+        long nmbrForFactorization;
+        // в основе этого цикла метод решето Эратосфена
+        for (int primeNmbr = 2; primeNmbr <= n; primeNmbr++) {
+            if (!visitedNmbrs[primeNmbr]) {
+                nmbrForFactorization = primeNmbr;
+                while (nmbrForFactorization <= n) {
+                    for (int i = 1; nmbrForFactorization * i % 1_000_000_007 <= n; i++) {
+                        powForCurrPrime++;
+                        // тут мы производим сокращение на k!
+                        if (nmbrForFactorization * i % 1_000_000_007 <= k) {
+                            powForCurrPrime--;
+                        }
+                        // тут мы производим сокращение на (n-k)!
+                        if (nmbrForFactorization * i % 1_000_000_007 <= n - k) {
+                            powForCurrPrime--;
+                        }
+                        // отмечаем числа, которые уже вошли в разложение
+                        visitedNmbrs[(int) nmbrForFactorization * i % 1_000_000_007] = true;
+                    }
+                    nmbrForFactorization *= primeNmbr;
+                }
+                result = result * euler(primeNmbr, powForCurrPrime) % 1_000_000_007;
+                powForCurrPrime = 0;
             }
         }
-
-        result *= euler(r);
         return result;
     }
 
-    private List<Long> getBinomAsMultipliers(int n, int k) {
-        if (k > n / 2) k = n - k;
-        if (k == 1) return List.of((long) n);
-        if (k == 0) return List.of(1L);
-
-        ArrayList<Long> primeMultipliers = eratosthenesSeive(n);
-        int currPrimePow;
-        for (int i = 0; i < primeMultipliers.size(); i++) {
-            Long currPrime = primeMultipliers.get(i);
-            long calculatedNmbr = 1L;
-            int m = n - k;
-            for (int j = 1; Math.pow(currPrime, j) <= n; j++) {
-                currPrimePow = (int) (n / Math.pow(currPrime, j));
-                calculatedNmbr = (calculatedNmbr * powWithModule(currPrimePow, currPrime)) % 1_000_000_007;
-            }
-            primeMultipliers.set(i, calculatedNmbr);
-        }
-        return primeMultipliers;
-    }
-    
-    private long powWithModule(int pow, long nmbr) {
-        long resultNmbr = nmbr;
-        while (pow > 1) {
-            resultNmbr = (resultNmbr * nmbr) % 1_000_000_007;
-            pow--;
-        }
-        return resultNmbr;
-    }
-
-    private ArrayList<Long> eratosthenesSeive(int upperLimit) {
-        boolean[] numbers = new boolean[upperLimit + 1];
-        ArrayList<Long> primeNmbrs = new ArrayList<>();
-
-        int currCompositeNumber;
-        for (int i = 2; i <= upperLimit; i++) {
-            if (!numbers[i]) {
-                primeNmbrs.add((long) i);
-                for (int j = 2; j < upperLimit; j++) {
-                    currCompositeNumber = i * j;
-                    if (currCompositeNumber <= upperLimit) {
-                        numbers[currCompositeNumber] = true;
-                    }
-                }
-            }
-        }
-        return primeNmbrs;
-    }
-
-    private long euler(long nmbr) {
-        if (nmbr == 0) {
+    /**
+     * Если primeNmbr — простое, pow — натуральное число, то \phi (p^a)=p^a-p^{a-1}.
+     * @param primeNmbr простое число
+     * @param pow степень primeNmbr
+     * @return кол-во простых числе перед primeNmbr
+     */
+    private long euler(long primeNmbr, long pow) {
+        if (pow == 0) {
             return 1;
         }
-        if (eulerFunCache.get(nmbr) != null) {
-            return eulerFunCache.get(nmbr);
+        if (pow == 1) {
+            return primeNmbr - 1;
         }
-        long result = 1L;
-        for (long i = nmbr - 1; i > 1; i--) {
-            if (findGcd(nmbr, i) == 1) {
-                result++;
-            }
+
+        long result = primeNmbr;
+        while (pow > 2) {
+            result = result * primeNmbr % 1_000_000_007;
+            pow--;
         }
-        eulerFunCache.put(nmbr, result);
-        return result;
+        return (result * primeNmbr) % 1_000_000_007 - result;
     }
 
-    private long findGcd(long a, long b) {
-        if (a % b == 0) {
-            return b;
-        }
-        return findGcd(b, a % b);
-    }
-
-    // тут старт программы. Ввод данных через консоль
+    /**
+     * Тут старт программы. Ввод данных через консоль
+     */
     public static void main(String[] args) {
-//        Scanner s = new Scanner(System.in);
-//        int k = s.nextInt();
-//        int n = s.nextInt();
+        Scanner s = new Scanner(System.in);
+        int k = s.nextInt();
+        int n = s.nextInt();
 
         EulerFunAndBinomProblem o = new EulerFunAndBinomProblem();
-//        System.out.println(o.solution(n, k));
-//        {2=8, 3=4, 5=2, 7=1}
-//        System.out.println(Math.pow(2, 8)*Math.pow(3, 4)*Math.pow(5, 2)*7);
-        System.out.println(o.getBinomAsMultipliers(10, 5));
+        System.out.println(o.solution(n, k));
     }
 }

@@ -37,7 +37,11 @@ class EulerFunAndBinomProblemTest {
 
     @Test
     public void simpleTest6() {
+        long startTime = System.currentTimeMillis();
         EulerFunAndBinomProblem o = new EulerFunAndBinomProblem();
-        Assertions.assertEquals(126720, o.solution(500_000, 250_000));
+        o.solution(500_000, 250_000);
+//        Assertions.assertEquals(126720, o.solution(500_000, 250_000));
+        long finishTime = System.currentTimeMillis();
+        System.out.println(finishTime - startTime + "ms");
     }
 }
