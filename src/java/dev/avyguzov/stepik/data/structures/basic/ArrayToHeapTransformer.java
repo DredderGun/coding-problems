@@ -1,43 +1,31 @@
 package dev.avyguzov.stepik.data.structures.basic;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 /**
- * Array to heap algorithm
- * <a href="https://stepik.org/lesson/41560/step/1?unit=20013">https://stepik.org/lesson/41560/step/1?unit=20013</a>
+ * Array to heap convertation
+ * <a href="https://stepik.org/lesson/41560/step/1">Problem description</a>
  */
 public class ArrayToHeapTransformer {
-    private int tracksNumber;
-    private final List<List<Integer>> trackList = new ArrayList<>();
-
     public String transformArrayToHeap(long[] arr) {
-        int parentI;
-        List<Integer> currTrack;
-        for (int i = arr.length - 1; i >= 1; i = i - 2) {
-            parentI = getParentIndex(i);
-            currTrack = new ArrayList<>();
-            currTrack.add(parentI);
-            siftDown(arr, parentI, currTrack);
-            if (currTrack.size() > 1) {
-                tracksNumber += currTrack.size() - 1;
-                trackList.add(currTrack);
-            }
+        List<List<Integer>> steps = new ArrayList<>();
+        for (int i = getParentIndex(arr.length - 1); i >= 0; i--) {
+            siftDown(arr, i, steps);
         }
-        return buildTrackString();
+        return buildTrackString(steps);
     }
 
-    private String buildTrackString() {
-        if (trackList.size() <= 1) {
+    private String buildTrackString(List<List<Integer>> steps) {
+        if (steps.size() <= 1) {
             return "0";
         }
         StringBuilder sb = new StringBuilder();
-        sb.append(tracksNumber).append("\n");
+        sb.append(steps.size()).append("\n");
 
-        for (List<Integer> currTrack : trackList) {
+        for (List<Integer> currTrack : steps) {
             for (int j = 1; j < currTrack.size(); j++) {
-                sb.append(currTrack.get(j - 1)).append(" ").append(currTrack.get(j).toString()).append("\n");
+                sb.append(currTrack.get(j - 1)).append(" ")
+                        .append(currTrack.get(j).toString()).append("\n");
             }
         }
 
@@ -61,7 +49,8 @@ public class ArrayToHeapTransformer {
     private int getRightChildIndex(int parentI) {
         return parentI * 2 + 2;
     }
-    private void siftDown(long[] arr, int index, List<Integer> track) {
+
+    private void siftDown(long[] arr, int index, List<List<Integer>> steps) {
         int rightChI = getRightChildIndex(index);
         int leftChI = getLefChildIndex(index);
         int minI = index;
@@ -80,8 +69,8 @@ public class ArrayToHeapTransformer {
         }
 
         swap(arr, index, minI);
-        track.add(minI);
-        siftDown(arr, minI, track);
+        steps.add(Arrays.asList(index, minI));
+        siftDown(arr, minI, steps);
     }
     
     public static void main(String[] args) {
