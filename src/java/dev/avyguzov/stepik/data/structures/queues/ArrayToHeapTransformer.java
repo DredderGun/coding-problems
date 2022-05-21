@@ -1,4 +1,4 @@
-package dev.avyguzov.stepik.data.structures.basic;
+package dev.avyguzov.stepik.data.structures.queues;
 
 import java.util.*;
 
