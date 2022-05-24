@@ -11,69 +11,63 @@ public class ParallelProcessingProblem {
         return i * 2 + 2;
     }
 
-    public long[] addToQueue(long[][] priorityQueueArr, int index, long time) {
-        long[] root = new long[] {priorityQueueArr[index][0], priorityQueueArr[index][1]};
-        priorityQueueArr[index][1] += time;
-        siftDown(priorityQueueArr, index);
-        return root;
+    /**
+     * Топит корневой узел с новым значением val += time
+     * Приоритет = значение (по задаче время работы) * n + номер элемента (по задаче номер процессора)
+     * @param priorityQueueArr очередь с приоритетом
+     * @param time значение (по задаче время на обработку)
+     * @return формат "{номер элемента} {значение времени}"
+     */
+    public long[] push(long[] priorityQueueArr, long time) {
+        long[] result = new long[] {priorityQueueArr[0] % priorityQueueArr.length, priorityQueueArr[0] / priorityQueueArr.length};
+        priorityQueueArr[0] += time * priorityQueueArr.length;
+        siftDown(priorityQueueArr, 0);
+        return result;
     }
 
-    private long[] siftDown(long[][] priorityQueueArr, int index) {
+    private void siftDown(long[] priorityQueueArr, int index) {
         int rightChI = getRightChildIndex(index);
         int leftChI = getLeftChildIndex(index);
         int minI = index;
 
-        // проверяем значения
-        if (rightChI < priorityQueueArr.length && priorityQueueArr[index][1] > priorityQueueArr[rightChI][1]) {
+        if (rightChI < priorityQueueArr.length && priorityQueueArr[index] > priorityQueueArr[rightChI]) {
             minI = rightChI;
         }
-        if (leftChI < priorityQueueArr.length && priorityQueueArr[index][1] > priorityQueueArr[leftChI][1]) {
-            minI = leftChI;
-        }
-        // проверяем id
-        if (rightChI < priorityQueueArr.length && priorityQueueArr[index][1] == priorityQueueArr[rightChI][1] &&
-                priorityQueueArr[index][0] > priorityQueueArr[rightChI][0]) {
-            minI = rightChI;
-        }
-        if (leftChI < priorityQueueArr.length && priorityQueueArr[index][1] == priorityQueueArr[leftChI][1] &&
-                priorityQueueArr[index][0] > priorityQueueArr[leftChI][0]) {
+        if (leftChI < priorityQueueArr.length && priorityQueueArr[index] > priorityQueueArr[leftChI]) {
             minI = leftChI;
         }
         if (minI == index) {
-            return priorityQueueArr[index];
+            return;
         }
 
         if (leftChI < priorityQueueArr.length && rightChI < priorityQueueArr.length) {
-            minI = priorityQueueArr[rightChI][1] == priorityQueueArr[leftChI][1] ?
-                    priorityQueueArr[rightChI][0] < priorityQueueArr[leftChI][0] ? rightChI : leftChI :
-                    priorityQueueArr[rightChI][1] < priorityQueueArr[leftChI][1] ? rightChI : leftChI;
+            minI = priorityQueueArr[rightChI] < priorityQueueArr[leftChI] ? rightChI : leftChI;
         }
 
         swap(priorityQueueArr, index, minI);
-        return siftDown(priorityQueueArr, minI);
+        siftDown(priorityQueueArr, minI);
     }
 
-    private void swap(long[][] ar, int i1, int i2) {
-        long[] temp = ar[i1];
+    private void swap(long[] ar, int i1, int i2) {
+        long temp = ar[i1];
         ar[i1] = ar[i2];
         ar[i2] = temp;
     }
 
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
-        long[][] processorsPriorityQueue = new long[in.nextInt()][2];
+        long[] processorsPriorityQueue = new long[in.nextInt()];
         int m = in.nextInt();
         ParallelProcessingProblem o = new ParallelProcessingProblem();
         for (int i = 0; i < processorsPriorityQueue.length; i++) {
-            processorsPriorityQueue[i][0] = i;
+            // приоритет = значение (по задаче время работы) * n + номер элемента (по задаче номер процессора)
+            processorsPriorityQueue[i] = i;
         }
 
         long[] result;
-        long time;
         for (int i = 0; i < m; i++) {
-            time = in.nextLong();
-            result = o.addToQueue(processorsPriorityQueue, 0, time);
-            System.out.println(result[0] + " " + (result[1]));
+            result = o.push(processorsPriorityQueue, in.nextLong());
+            System.out.println(result[0] + " " + result[1]);
         }
     }
 }
