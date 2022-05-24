@@ -3,7 +3,7 @@ package dev.avyguzov.stepik.data.structures.queues;
 import java.util.*;
 
 /**
- * Array to heap convertation
+ * An array to heap converter
  * <a href="https://stepik.org/lesson/41560/step/1">Problem description</a>
  */
 public class ArrayToHeapTransformer {
@@ -15,6 +15,11 @@ public class ArrayToHeapTransformer {
         return buildTrackString(steps);
     }
 
+    /**
+     * Возвращает строку с перемещениями, которые были сделаны в массиве.
+     * @param steps список с перемещениями
+     * @return строка с перемещениями
+     */
     private String buildTrackString(List<List<Integer>> steps) {
         if (steps.size() <= 1) {
             return "0";
@@ -42,7 +47,7 @@ public class ArrayToHeapTransformer {
         return (childIndex - 1) / 2;
     }
 
-    private int getLefChildIndex(int parentI) {
+    private int getLeftChildIndex(int parentI) {
         return parentI * 2 + 1;
     }
 
@@ -52,7 +57,7 @@ public class ArrayToHeapTransformer {
 
     private void siftDown(long[] arr, int index, List<List<Integer>> steps) {
         int rightChI = getRightChildIndex(index);
-        int leftChI = getLefChildIndex(index);
+        int leftChI = getLeftChildIndex(index);
         int minI = index;
         
         if (rightChI < arr.length && arr[index] > arr[rightChI]) {
