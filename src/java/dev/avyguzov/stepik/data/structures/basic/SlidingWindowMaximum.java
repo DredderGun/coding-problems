@@ -64,7 +64,7 @@ public class SlidingWindowMaximum {
             int currNmbr = nmbrs[i];
             leftStack.push(currNmbr);
             if (rightStack.isEmpty()) {
-                result.append(leftStack.getMaxInStack()).append(" ");;
+                result.append(leftStack.getMaxInStack()).append(" ");
                 while (!leftStack.isEmpty()) {
                     rightStack.push(leftStack.pop());
                 }
