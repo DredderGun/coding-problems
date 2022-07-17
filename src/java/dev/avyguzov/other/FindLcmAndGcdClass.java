@@ -28,7 +28,8 @@ public class FindLcmAndGcdClass {
 
         int a;
         int b;
-        for (a = givenGcd; a <= givenLcm; a++) {
+        int count = 0;
+        for (a = givenGcd; a <= givenLcm; a = a + 12) {
             if (productOfGivenGcdAndLcm % a == 0) {
                 b = productOfGivenGcdAndLcm / a;
                 int gcd;
@@ -38,6 +39,7 @@ public class FindLcmAndGcdClass {
                     gcd = findGcd(a, b);
                 }
                 int lcm = findLcm(a, b, gcd);
+                count++;
 
                 if (gcd == givenGcd && lcm == givenLcm && a + b < minSum) {
                     minSum = a + b;
@@ -49,6 +51,7 @@ public class FindLcmAndGcdClass {
         System.out.println(minSum);
         System.out.println(foundNumberOne);
         System.out.println(foundNumberTwo);
+        System.out.println(count);
     }
 
 

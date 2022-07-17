@@ -5,11 +5,21 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Instance of that class get you a value of the shortest track to a required node in a graph.
+ * Instance of that class get a value of the shortest track to a required node in a graph.
  *
  * @author Aleksandr Vyguzov
  */
 public class BreadthFirstSearch {
+
+    static public class NodeBFS {
+        public List<NodeBFS> childes;
+        public String name;
+
+        public NodeBFS(String name) {
+            this.name = name;
+            this.childes = new ArrayList<>();
+        }
+    }
 
     protected List<NodeBFS> visitedNodes = new ArrayList<>();
 
