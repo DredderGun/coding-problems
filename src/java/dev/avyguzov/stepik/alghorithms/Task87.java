@@ -17,8 +17,6 @@ public class Task87 {
         int[] prevBestResults = new int[demandSum];
         int[] currBestResults = new int[demandSum];
 
-        int resultCounter = 0;
-
         for (int i = 0; i < coins.length; i++) {
             int currCoin = coins[i];
             for (int i1 = 0; i1 < prevBestResults.length; i1++) {
@@ -26,8 +24,6 @@ public class Task87 {
                     currBestResults[i1] = prevBestResults[i1] + 1;
                 } else if (i1 - currCoin > -1 && prevBestResults[i1 - currCoin] > (prevBestResults[i1] + 1)) {
                     currBestResults[i1] = prevBestResults[i1] + 1;
-                } else {
-                                        
                 }
             }
         }
